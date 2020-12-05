@@ -6,7 +6,6 @@
 #include "MQTTAsync.h"
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #include <ArduinoJson.h>
-#include <Mqtt.h>
 
 #define QOS 0
 #define TIMEOUT 10000L
@@ -20,17 +19,12 @@ class MqttPaho : public Mqtt {
     MS_DISCONNECTED,
     MS_CONNECTING
   } MqttConnectionState;
-  typedef void (*StateChangeCallback)(void*, MqttConnectionState);
-  typedef void (*OnMessageCallback)(void*, std::string, std::string);
 
  private:
-  StaticJsonDocument<3000> _jsonBuffer;
   std::string _clientId;
   TimerSource _reportTimer;
   TimerSource _keepAliveTimer;
-  std::string _hostPrefix;
 
-  MQTTAsync_token _deliveredtoken;
   MQTTAsync _client;
   std::string _connection;
   int _keepAliveInterval;
@@ -70,43 +64,9 @@ class MqttPaho : public Mqtt {
   int disconnect();
   int publish(std::string topic, std::string message, int qos = 0,
               bool retain = false);
-  //  int publish(std::string topic, Bytes message, int qos, bool retain);
   int subscribe(std::string topic);
   int lastWill(std::string topic, std::string message, int qos, bool retain);
-  void onMessage(void* context, OnMessageCallback);
   MqttConnectionState state();
-
-  void mqttPublish(const char* topic, const char* message);
-  void mqttSubscribe(const char* topic);
-  void mqttConnect();
-  void mqttDisconnect();
-
-  bool handleMqttMessage(const char* message);
-
-  void onNext(const TimerMsg&);
-  void onNext(const MqttMessage&);
-  void request();
-  /*  template <class T>
-    Subscriber<T>& toTopic(const char* name) {
-      auto flow = new ToMqtt<T>(name);
-      *flow >> outgoing;
-      return *flow;
-    }
-    template <class T>
-    Source<T>& fromTopic(const char* name) {
-      auto newSource = new FromMqtt<T>(name);
-      incoming >> *newSource;
-      return *newSource;
-    }*/
-  /*
-                          template <class T>
-                          MqttFlow<T>& topic(const char* name) {
-                                  auto newFlow = new MqttFlow<T>(name);
-                                  incoming >> newFlow->mqttIn;
-                                  newFlow->mqttOut >> outgoing;
-                                  return *newFlow;
-                          }
-                          void observeOn(Thread& thread);*/
 };
 
 //_______________________________________________________________________________________________________________

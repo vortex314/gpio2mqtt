@@ -66,35 +66,6 @@ void MqttPaho::init() {
 //________________________________________________________________________
 //
 
-//________________________________________________________________________
-//
-
-void MqttPaho::onNext(const MqttMessage& m) {
-  if (connected()) {
-    std::string topic = _hostPrefix;
-    topic += m.topic;
-    publish(topic.c_str(), m.message.c_str());
-  };
-}
-//________________________________________________________________________
-//
-void MqttPaho::onNext(const TimerMsg& tm) {
-  if (tm.id == TIMER_KEEP_ALIVE && connected()) {
-    onNext({_lastWillTopic.c_str(), "true"});
-  }
-}
-//________________________________________________________________________
-//
-
-//________________________________________________________________________
-//
-typedef enum { PING = 0, PUBLISH, PUBACK, SUBSCRIBE, SUBACK } CMD;
-//________________________________________________________________________
-//
-
-//________________________________________________________________________
-//
-
 int MqttPaho::lastWill(std::string topic, std::string message, int qos,
                        bool retain) {
   _lastWillMessage = message;
