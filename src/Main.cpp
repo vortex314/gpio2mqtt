@@ -5,7 +5,6 @@
 #include <NanoAkka.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <wiringPi.h>
 Log logger(2048);
 Thread mainThread("main");
 MqttPaho mqtt(mainThread);
@@ -14,7 +13,6 @@ StaticJsonDocument<10240> jsonDoc;
 
 int main(int argc, char** argv) {
   Sys::init();
-  wiringPiSetupSys();
   JsonObject mqttConfig = jsonDoc.to<JsonObject>();
   mqttConfig["device"] = "GPIO";
   mqttConfig["connection"] = "tcp://limero.ddns.net";
@@ -24,10 +22,13 @@ int main(int argc, char** argv) {
 
   gpio6.mode.on("OUTPUT");
 
-  mqtt.fromTopic<int>("gpio6/value") >> gpio6.value;
-  mqtt.fromTopic<std::string>("gpio6/mode") >> gpio6.mode;
+  // mqtt.fromTopic<int>("gpio6/value") >> gpio6.value;
 
-  mqtt.fromTopic<int>("src/pcdell/js0/axis0") >>
+  mqtt.topic<int>("gpio6/value") == gpio6.value;
+
+  mqtt.topic<std::string>("gpio6/mode") == gpio6.mode;
+
+  mqtt.fromTopic<int>("src/pcdell/js0/axis0") >> 
       mqtt.toTopic<int>("dst/GPIO/gpio6/value");
 
   mqtt.connected >> [](const bool& b) {

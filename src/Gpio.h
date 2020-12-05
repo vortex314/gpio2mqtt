@@ -1,7 +1,6 @@
 #ifndef _GPIO_H_
 #define _GPIO_H_
 #include <NanoAkka.h>
-#include <wiringPi.h>
 class Gpio {
   int _pin;
 
@@ -11,6 +10,7 @@ class Gpio {
   ~Gpio();
   ValueFlow<std::string> mode;
   ValueFlow<int> value;
+  static void init();
 
  private:
   Mode _mode;

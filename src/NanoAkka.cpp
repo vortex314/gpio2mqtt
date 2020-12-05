@@ -19,10 +19,6 @@ NanoStats stats;
 */
 int Thread::_id = 0;
 
-int _pipeFd[2];
-int _writePipe = 0;
-int _readPipe = 0;
-
 int readPipe(int readFd, void* data, int size, uint32_t timeout) {
   fd_set rfds;
   fd_set wfds;
