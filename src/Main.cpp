@@ -5,6 +5,7 @@
 #include <NanoAkka.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <wiringPi.h>
 Log logger(2048);
 Thread mainThread("main");
 MqttPaho mqtt(mainThread);
@@ -13,6 +14,7 @@ StaticJsonDocument<10240> jsonDoc;
 
 int main(int argc, char** argv) {
   Sys::init();
+  wiringPiSetupSys();
   JsonObject mqttConfig = jsonDoc.to<JsonObject>();
   mqttConfig["device"] = "GPIO";
   mqttConfig["connection"] = "tcp://limero.ddns.net";

@@ -168,8 +168,8 @@ void MqttPaho::onConnectionLost(void* context, char* cause) {
 
 int MqttPaho::onMessage(void* context, char* topicName, int topicLen,
                         MQTTAsync_message* message) {
-  //  INFO(" receiving message %s[%d] context %X", topicName, topicLen,
-  //  context);
+    INFO(" receiving message %s[%d] context %X", topicName, topicLen,
+    context);
   MqttPaho* me = (MqttPaho*)context;
   std::string msg((char*)message->payload, message->payloadlen);
   std::string topic(topicName, topicLen);
