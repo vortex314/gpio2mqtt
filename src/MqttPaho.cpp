@@ -30,9 +30,13 @@ void MqttPaho::config(JsonObject& conf) {
   _connection = conf["connection"] | "tcp://test.mosquitto.org";
   _lastWillMessage = conf["LW"]["message"] | "false";
   _lastWillQos = conf["LW"]["qos"] | 0;
-  std::string defaultTopic = "src/";
-  defaultTopic += Sys::hostname();
-  defaultTopic += "/system/alive";
+  srcPrefix = "src/";
+  srcPrefix += conf["device"] | Sys::hostname();
+  srcPrefix += "/";
+  dstPrefix = "dst/";
+  dstPrefix += conf["device"] | Sys::hostname();
+  dstPrefix += "/";
+  std::string defaultTopic = srcPrefix + "system/alive";
   _lastWillTopic = conf["LW"]["topic"] | defaultTopic;
   _lastWillRetain = conf["LW"]["retain"] | false;
   _keepAliveInterval = conf["keepAliveInterval"] | 20;
@@ -40,7 +44,7 @@ void MqttPaho::config(JsonObject& conf) {
 //________________________________________________________________________
 //
 void MqttPaho::init() {
-  _clientId = Sys::hostname();
+  _clientId = dstPrefix;
   INFO(" connection : %s ", _connection.c_str());
   state(MS_DISCONNECTED);
 
@@ -50,11 +54,7 @@ void MqttPaho::init() {
       ([&](const TimerMsg& tm) { publish(_lastWillTopic.c_str(), "true"); });
 
   outgoing.async(thread(), [&](const MqttMessage& m) {
-    std::string topic = "src/";
-    topic += Sys::hostname();
-    topic += m.topic;
-
-    publish(topic.c_str(), m.message.c_str());
+    publish(m.topic.c_str(), m.message.c_str());
   });
   keepAliveTimer.interval(1000);
   keepAliveTimer.repeat(true);
@@ -197,11 +197,12 @@ void MqttPaho::onConnectionLost(void* context, char* cause) {
 
 int MqttPaho::onMessage(void* context, char* topicName, int topicLen,
                         MQTTAsync_message* message) {
-  INFO(" receiving message %s[%d] context %X", topicName, topicLen, context);
+  //  INFO(" receiving message %s[%d] context %X", topicName, topicLen,
+  //  context);
   MqttPaho* me = (MqttPaho*)context;
   std::string msg((char*)message->payload, message->payloadlen);
   std::string topic(topicName, topicLen);
-  me->incoming.on({topic.substr(me->_hostPrefix.length()), msg});
+  me->incoming.on({topic, msg});
 
   MQTTAsync_freeMessage(&message);
   MQTTAsync_free(topicName);
@@ -228,11 +229,7 @@ void MqttPaho::onConnectSuccess(void* context,
   MqttPaho* me = (MqttPaho*)context;
   me->state(MS_CONNECTED);
   INFO("MQTT_EVENT_CONNECTED to %s", me->_connection.c_str());
-  std::string topics = "dst/";
-  topics += Sys::hostname();
-  me->subscribe(topics.c_str());
-  topics += "/#";
-  me->subscribe(topics.c_str());
+  me->subscribe(me->dstPrefix + "#");
 }
 
 void MqttPaho::onSubscribeSuccess(void* context,

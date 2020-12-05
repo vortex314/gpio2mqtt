@@ -86,18 +86,18 @@ class MqttPaho : public Mqtt {
   void onNext(const TimerMsg&);
   void onNext(const MqttMessage&);
   void request();
-  template <class T>
-  Subscriber<T>& toTopic(const char* name) {
-    auto flow = new ToMqtt<T>(name);
-    *flow >> outgoing;
-    return *flow;
-  }
-  template <class T>
-  Source<T>& fromTopic(const char* name) {
-    auto newSource = new FromMqtt<T>(name);
-    incoming >> *newSource;
-    return *newSource;
-  }
+  /*  template <class T>
+    Subscriber<T>& toTopic(const char* name) {
+      auto flow = new ToMqtt<T>(name);
+      *flow >> outgoing;
+      return *flow;
+    }
+    template <class T>
+    Source<T>& fromTopic(const char* name) {
+      auto newSource = new FromMqtt<T>(name);
+      incoming >> *newSource;
+      return *newSource;
+    }*/
   /*
                           template <class T>
                           MqttFlow<T>& topic(const char* name) {

@@ -87,7 +87,7 @@ void Thread::start() {
 }
 
 int Thread::enqueue(Invoker* invoker) {
-  INFO("Thread '%s' >>> '%lX", _name.c_str(), invoker);
+  //  INFO("Thread '%s' >>> '%lX", _name.c_str(), invoker);
   if (_writePipe)
     if (write(_writePipe, (const char*)&invoker, sizeof(Invoker*)) == -1) {
       stats.threadQueueOverflow++;
@@ -123,13 +123,13 @@ void Thread::run() {
       Invoker* prq = 0;
       if (waitTime == 0) noWaits++;
       unsigned int priority = 0;
-      INFO(" waiting ... %d msec", waitTime);
+      DEBUG(" waiting ... %d msec", waitTime);
       int rc = readPipe(_readPipe, &prq, sizeof(Invoker*), waitTime);
       if (rc == 1) {
-        INFO(" got message %d on queue %lX", rc, prq);
+        DEBUG(" got message %d on queue %lX", rc, prq);
         uint64_t start = Sys::millis();
         prq->invoke();
-        INFO(" returned invoke");
+        DEBUG(" returned invoke");
         uint32_t delta = Sys::millis() - start;
         if (delta > 50)
           WARN("Invoker [%X] slow %d msec invoker on thread '%s'.", prq, delta,
