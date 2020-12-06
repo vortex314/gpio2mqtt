@@ -8,11 +8,12 @@
 Log logger(2048);
 Thread mainThread("main");
 MqttPaho mqtt(mainThread);
-Gpio gpio6(6);
+Gpio gpio6(25);
 StaticJsonDocument<10240> jsonDoc;
 
 int main(int argc, char** argv) {
   Sys::init();
+  Gpio::init();
   JsonObject mqttConfig = jsonDoc.to<JsonObject>();
   mqttConfig["device"] = "GPIO";
   mqttConfig["connection"] = "tcp://limero.ddns.net";

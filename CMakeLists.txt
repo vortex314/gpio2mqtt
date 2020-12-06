@@ -8,7 +8,9 @@ add_executable(gpio2mqtt  src/Main.cpp  src/Sys.cpp src/Timer.cpp   src/NanoAkka
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+set(GCC_FLAGS "-DRPI")
 include(CPack)
 
+add_definitions(${GCC_FLAGS})
 include_directories(src ../Common ../ArduinoJson/src ../paho.mqtt.c/src ../nanoAkka/main/ ../nanoAkka/components/wifi ../paho.mqtt.c/src)
-target_link_libraries(gpio2mqtt -lpthread -L/home/lieven/workspace/paho.mqtt.c/build/output/ -l:libpaho-mqtt3c.a -L/home/lieven/workspace/Common/Debug/ -lCommon -lrt )
+target_link_libraries(gpio2mqtt -lpthread -L/home/lieven/workspace/paho.mqtt.c/build/output/ -l:libpaho-mqtt3c.a -L/home/lieven/workspace/Common/Debug/ -lCommon -lrt -lwiringPi )

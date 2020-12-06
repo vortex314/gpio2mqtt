@@ -13,7 +13,7 @@
 
 void Gpio::init() {
 #ifdef RPI
-  wiringPiSetupSys();
+  wiringPiSetupGpio();
 #endif
 }
 
@@ -41,3 +41,4 @@ Gpio::Gpio(int pin) {
 }
 
 Gpio::~Gpio() {}
+
