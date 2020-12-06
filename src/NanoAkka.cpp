@@ -66,7 +66,7 @@ void Thread::createQueue() {
   _writePipe = _pipeFd[1];
   _readPipe = _pipeFd[0];
   if (rc < 0) WARN("Queue creation failed %d %s ", errno, strerror(errno));
-  if (fcntl(_readPipe, F_SETFL, 0) < 0) {
+  if (fcntl(_writePipe, F_SETFL,O_NONBLOCK ) < 0) {
     WARN("Failed to set pipe blocking mode: %s (%d)", strerror(errno), errno);
   }
 }
@@ -119,7 +119,7 @@ void Thread::run() {
       Invoker* prq = 0;
       if (waitTime == 0) noWaits++;
       unsigned int priority = 0;
-      DEBUG(" waiting ... %d msec", waitTime);
+      INFO(" waiting ... %d msec", waitTime);
       int rc = readPipe(_readPipe, &prq, sizeof(Invoker*), waitTime);
       if (rc == 1) {
         DEBUG(" got message %d on queue %lX", rc, prq);
@@ -130,7 +130,11 @@ void Thread::run() {
         if (delta > 50)
           WARN("Invoker [%X] slow %d msec invoker on thread '%s'.", prq, delta,
                _name.c_str());
-      } else if (rc == ETIMEDOUT) {
+      	} else {
+//        WARN(" readPipe : %d  : error : %s (%d)", rc, strerror(errno), errno);
+        noWaits = 0;
+      }
+      } else {
         noWaits++;
         if (expiredTimer) {
           if (-waitTime > 100)
@@ -143,10 +147,6 @@ void Thread::run() {
             WARN("Timer [%X] request slow %d msec on thread '%s'", expiredTimer,
                  deltaExec, _name.c_str());
         }
-      } else {
-        WARN(" readPipe : %d  : error : %s (%d)", rc, strerror(errno), errno);
-        noWaits = 0;
-      }
     }
   }
 }
