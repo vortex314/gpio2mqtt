@@ -66,7 +66,7 @@ void Thread::createQueue() {
   _writePipe = _pipeFd[1];
   _readPipe = _pipeFd[0];
   if (rc < 0) WARN("Queue creation failed %d %s ", errno, strerror(errno));
-  if (fcntl(_writePipe, F_SETFL,O_NONBLOCK ) < 0) {
+  if (fcntl(_writePipe, F_SETFL, O_NONBLOCK) < 0) {
     WARN("Failed to set pipe blocking mode: %s (%d)", strerror(errno), errno);
   }
 }
@@ -130,23 +130,24 @@ void Thread::run() {
         if (delta > 50)
           WARN("Invoker [%X] slow %d msec invoker on thread '%s'.", prq, delta,
                _name.c_str());
-      	} else {
-//        WARN(" readPipe : %d  : error : %s (%d)", rc, strerror(errno), errno);
+      } else {
+        //        WARN(" readPipe : %d  : error : %s (%d)", rc, strerror(errno),
+        //        errno);
         noWaits = 0;
       }
-      } else {
-        noWaits++;
-        if (expiredTimer) {
-          if (-waitTime > 100)
-            INFO("Timer[%X] already expired by %u msec on thread '%s'.",
-                 expiredTimer, -waitTime, _name.c_str());
-          uint64_t start = Sys::millis();
-          expiredTimer->request();
-          uint32_t deltaExec = Sys::millis() - start;
-          if (deltaExec > 50)
-            WARN("Timer [%X] request slow %d msec on thread '%s'", expiredTimer,
-                 deltaExec, _name.c_str());
-        }
+    } else {
+      noWaits++;
+      if (expiredTimer) {
+        if (-waitTime > 100)
+          INFO("Timer[%X] already expired by %u msec on thread '%s'.",
+               expiredTimer, -waitTime, _name.c_str());
+        uint64_t start = Sys::millis();
+        expiredTimer->request();
+        uint32_t deltaExec = Sys::millis() - start;
+        if (deltaExec > 50)
+          WARN("Timer [%X] request slow %d msec on thread '%s'", expiredTimer,
+               deltaExec, _name.c_str());
+      }
     }
   }
 }
