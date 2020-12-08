@@ -8,7 +8,7 @@
 Log logger(2048);
 Thread mainThread("main");
 MqttPaho mqtt(mainThread);
-Gpio gpio6(25);
+Gpio gpio25(25);
 StaticJsonDocument<10240> jsonDoc;
 
 int main(int argc, char** argv) {
@@ -21,16 +21,16 @@ int main(int argc, char** argv) {
   mqtt.init();
   mqtt.connect();
 
-  gpio6.mode.on("OUTPUT");
+  gpio25.mode.on("OUTPUT");
 
-  // mqtt.fromTopic<int>("gpio6/value") >> gpio6.value;
+  // mqtt.fromTopic<int>("gpio25/value") >> gpio25.value;
 
-  mqtt.topic<int>("gpio6/value") == gpio6.value;
+  mqtt.topic<int>("gpio25/value") == gpio25.value;
 
-  mqtt.topic<std::string>("gpio6/mode") == gpio6.mode;
+  mqtt.topic<std::string>("gpio25/mode") == gpio25.mode;
 
-  mqtt.fromTopic<int>("src/pcdell/js0/axis0") >> 
-      mqtt.toTopic<int>("dst/GPIO/gpio6/value");
+  mqtt.fromTopic<int>("src/pcdell/js0/axis0") >>
+      mqtt.toTopic<int>("dst/GPIO/gpio25/value");
 
   mqtt.connected >> [](const bool& b) {
     if (b) mqtt.subscribe("src/pcdell/js0/axis0");
