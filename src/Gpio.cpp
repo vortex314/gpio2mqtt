@@ -41,4 +41,3 @@ Gpio::Gpio(int pin) {
 }
 
 Gpio::~Gpio() {}
-
