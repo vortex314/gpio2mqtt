@@ -1,8 +1,9 @@
 #include <Config.h>
 #include <Gpio.h>
+#include <Hardware.h>
 #include <Log.h>
 #include <MqttPaho.h>
-#include <NanoAkka.h>
+#include <limero.h>
 #include <stdio.h>
 #include <unistd.h>
 Log logger(2048);
@@ -13,7 +14,7 @@ StaticJsonDocument<10240> jsonDoc;
 
 int main(int argc, char** argv) {
   Sys::init();
-  Gpio::init();
+
   JsonObject mqttConfig = jsonDoc.to<JsonObject>();
   mqttConfig["device"] = "GPIO";
   mqttConfig["connection"] = "tcp://limero.ddns.net";
