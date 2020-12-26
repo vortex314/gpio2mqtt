@@ -11,6 +11,14 @@ I've only implemented GPIO output, as this is the only thing I need at this time
 I2C and SPI should be easy added
 
 The code should run as root to have access to GPIO wiringPi. 
+# run as a service on Raspberry Pi
+```
+cp gpio2mqtt.service /etc/systemd/system
+systemctl daemon-reload
+journalctl | tail -f   # check logs
+systemctl status gpio2mqtt  # chck status
+systemctl enable gpio2mqtt  # run at reboot
+```
 
 # Connect joystick to GPIO 
 ```

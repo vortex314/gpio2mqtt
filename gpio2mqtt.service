@@ -1,0 +1,15 @@
+[Unit]
+Description=GPIO to MQTT service
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=root
+Group=root
+ExecStart=/home/lieven/workspace/gpio2mqtt/build/gpio2mqtt 
+WorkingDirectory=/home/lieven/workspace/gpio2mqtt/build/
+
+[Install]
+WantedBy=multi-user.target
