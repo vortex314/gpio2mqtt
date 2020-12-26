@@ -19,6 +19,21 @@ journalctl | tail -f   # check logs
 systemctl status gpio2mqtt  # chck status
 systemctl enable gpio2mqtt  # run at reboot
 ```
+# Build instruction
+```
+git clone https://github.com/vortex314/gpio2mqtt
+git clone https://github.com/vortex314/limero
+cd limero
+mkdir build
+cd build
+cmake ..
+cmake --build .
+cd ../../gpio2mqtt
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
 
 # Connect joystick to GPIO 
 ```
