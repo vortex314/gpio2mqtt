@@ -13,12 +13,11 @@ include(CPack)
 
 add_definitions(${GCC_FLAGS})
 include_directories(src  ../limero/inc ../limero/linux ../ArduinoJson/src ../paho.mqtt.c/src  )
-target_link_libraries(gpio2mqtt -lpthread -L/home/lieven/workspace/limero/linux/build/ -llimero -L/home/lieven/workspace/paho.mqtt.c/build/output/ -l:libpaho-mqtt3c.a  -lrt -pthread )
+target_link_libraries(gpio2mqtt -lpthread -L/home/lieven/workspace/limero/linux/build/ -llimero -L/home/lieven/workspace/paho.mqtt.c/build/output/ -l:libpaho-mqtt3c.a  -lrt -pthread -latomic )
 EXECUTE_PROCESS( COMMAND arch OUTPUT_VARIABLE ARCH OUTPUT_STRIP_TRAILING_WHITESPACE )
-	message( STATUS "hell12 " ${ARCH})
 
-if ( ${ARCH} STREQUAL "armv6l" )
+if ( ${ARCH} STREQUAL "armv6l" OR ${ARCH} STREQUAL "armv7l")
         target_link_libraries(gpio2mqtt -lwiringPi)
-	message( STATUS "hello2 ")
+	set(GCC_FLAGS "-DHAS_GPIO")
 endif()
 
