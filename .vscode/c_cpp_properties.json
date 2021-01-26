@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "ESP32",
+            "name": "RASPI",
             "includePath": [
                 "${workspaceFolder}/../limero/inc",
                 "${workspaceFolder}/../ArduinoJson/src/",
@@ -10,7 +10,6 @@
                 "${workspaceFolder}/src"
             ],
             "defines": [
-                "NOTHING",
                 "X86_LINUX"
             ],
             "compilerPath": "/usr/bin/gcc",

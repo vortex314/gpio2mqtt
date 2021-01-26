@@ -1,0 +1,27 @@
+{
+    "mqtt": {
+        "connection": "tcp://limero.ddns.net",
+        "keepAliveInterval": 5,
+        "device": "gpio",
+        "LW": {
+            "topic": "src/gpio/system/alive",
+            "message": "false",
+            "qos": 1,
+            "retain": true
+        }
+    },
+    "gpio": {
+        "2": [
+            "OUTPUT",
+            1
+        ],
+        "22": [
+            "OUTPUT",
+            1
+        ],
+        "26": [
+            "OUTPUT",
+            1
+        ]
+    }
+}
