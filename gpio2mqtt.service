@@ -9,7 +9,7 @@ RestartSec=5
 User=root
 Group=root
 ExecStart=/home/lieven/workspace/gpio2mqtt/build/gpio2mqtt 
-WorkingDirectory=/home/lieven/workspace/gpio2mqtt/build/
+WorkingDirectory=/home/lieven/workspace/gpio2mqtt
 
 [Install]
 WantedBy=multi-user.target
