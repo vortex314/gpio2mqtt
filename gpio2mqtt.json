@@ -1,6 +1,6 @@
 {
     "mqtt": {
-        "connection": "tcp://limero.ddns.net",
+        "connection": "tcp://localhost",
         "keepAliveInterval": 5,
         "device": "gpio",
         "LW": {
@@ -23,5 +23,9 @@
             "OUTPUT",
             0
         ]
+    },
+    "log": {
+        "level": "I",
+        "file": "gpio2mqtt.log"
     }
 }

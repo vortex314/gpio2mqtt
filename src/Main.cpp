@@ -37,7 +37,22 @@ bool loadConfig(JsonDocument& doc, const char* name) {
   }
   return true;
 }
+FILE* logFd = 0;
 
+void myLogFunction(char* s, uint32_t length) {
+  fprintf(logFd, "%s\n", s);
+  fflush(logFd);
+  fprintf(stdout, "%s\r\n", s);
+}
+
+void myLogInit(const char* logFile) {
+  logFd = fopen(logFile, "a");
+  if (logFd == NULL) {
+    WARN("open logfile %s failed : %d %s", logFile, errno, strerror(errno));
+  } else {
+    logger.writer(myLogFunction);
+  }
+}
 /*
 +-----+-----+---------+------+---+---Pi 3B--+---+------+---------+-----+-----+
  | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
@@ -69,7 +84,8 @@ bool loadConfig(JsonDocument& doc, const char* name) {
 
 // uint8_t gpioRaspberry[] = {4, 9, 10, 17, 18, 22, 23, 24, 25, 27}; //
 // RAspberry Pi 1
-//uint8_t gpioRaspberry[] = {0,1,2,3,4,5,6,7,21,22,23,24,25,26,27,28,29}; // wiringPi convention
+// uint8_t gpioRaspberry[] = {0,1,2,3,4,5,6,7,21,22,23,24,25,26,27,28,29}; //
+// wiringPi convention
 
 int main(int argc, char** argv) {
   Sys::init();
@@ -78,6 +94,14 @@ int main(int argc, char** argv) {
     std::string jsonString;
     serializeJsonPretty(jsonDoc, jsonString);
     INFO(" config loaded : %s ", jsonString.c_str());
+  }
+
+  JsonObject config = jsonDoc["log"];
+  std::string level = config["level"] | "I";
+  logger.setLogLevel(level[0]);
+  if (config["file"]) {
+    std::string logFile = config["file"];
+    myLogInit(logFile.c_str());
   }
 
   JsonObject mqttConfig = jsonDoc["mqtt"];
