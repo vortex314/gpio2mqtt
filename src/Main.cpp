@@ -104,6 +104,8 @@ int main(int argc, char** argv) {
     myLogInit(logFile.c_str());
   }
 
+  INFO(" gpio2mqtt started. Build : %s ", __DATE__ " " __TIME__);
+
   JsonObject mqttConfig = jsonDoc["mqtt"];
   mqtt.config(mqttConfig);
   mqtt.init();

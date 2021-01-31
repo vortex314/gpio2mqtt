@@ -26,6 +26,6 @@
     },
     "log": {
         "level": "I",
-        "file": "gpio2mqtt.log"
+        "file": "log_gpio2mqtt."
     }
 }
